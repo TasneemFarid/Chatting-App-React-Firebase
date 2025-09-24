@@ -4,9 +4,8 @@ import Flex from "../Flex";
 const AuthLayout = () => {
   return (
     <>
-      <Flex className={"justify-between"}>
-        <div className="bg-amber-950 h-screen !text-red-600 w-1/2">dddc</div>
-        <div className="h-screen w-1/2">
+      <Flex className={"justify-center h-screen font-openSans"}>
+        <div className="h-[350px] w-[300px] p-6 shadow-md shadow-gray-500 rounded-[20px]">
           <Outlet />
         </div>
       </Flex>
