@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Signin from './pages/Signin';
 import MainLayout from './components/layouts/MainLayout';
 import Home from './pages/Home';
+import firebaseConfig from './Firebase/firebaseConfig';
 
 const router = createBrowserRouter([
   {
