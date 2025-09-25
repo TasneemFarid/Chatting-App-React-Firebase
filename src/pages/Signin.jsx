@@ -5,6 +5,7 @@ import {
 } from "firebase/auth";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Bars } from "react-loader-spinner";
 import { Link, useNavigate } from "react-router";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -15,6 +16,7 @@ const Signin = () => {
   let [fullName, setFullName] = useState("");
   let [password, setPassword] = useState("");
   let [show, setShow] = useState(true);
+  let [loader, setLoader] = useState(false);
 
   let [emailErr, setEmailErr] = useState("");
   let [fullNameErr, setFullNameErr] = useState("");
@@ -65,10 +67,12 @@ const Signin = () => {
       password &&
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
     ) {
+      setLoader(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then(() => {
           toast.success("Sign up successful. Please verify email.");
           sendEmailVerification(auth.currentUser);
+          setLoader(false);
           setTimeout(() => {
             navigate("/login");
           }, 3000);
@@ -77,6 +81,7 @@ const Signin = () => {
           setPassword("");
         })
         .catch((error) => {
+          setLoader(false);
           console.log(error);
           if (error.message.includes("auth/email-already-in-use")) {
             setEmail("");
@@ -148,13 +153,25 @@ const Signin = () => {
 
           <p className="text-xs text-red-500">{passwordErr}</p>
         </div>
+        {loader ? (
+          <Bars
+            height="20"
+            width="20"
+            color="blue"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        ) : (
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-800 text-white px-4 py-1.5 text-xs rounded-md cursor-pointer"
+          >
+            Signin
+          </button>
+        )}
 
-        <button
-          onClick={handleSubmit}
-          className="bg-blue-800 text-white px-4 py-1.5 text-xs rounded-md cursor-pointer"
-        >
-          Signin
-        </button>
         <p className="text-xs">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-800">

@@ -10,6 +10,7 @@ import Signin from './pages/Signin';
 import MainLayout from './components/layouts/MainLayout';
 import Home from './pages/Home';
 import firebaseConfig from './Firebase/firebaseConfig';
+import ForgotPassword from './pages/ForgotPassword';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
     children: [
       { path: "login", Component: Login },
       { path: "signin", Component: Signin },
+      { path: "forgot-password", Component: ForgotPassword },
     ],
   },
   {

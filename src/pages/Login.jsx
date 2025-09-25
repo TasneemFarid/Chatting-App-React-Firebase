@@ -1,8 +1,17 @@
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let [show, setShow] = useState(true);
@@ -18,6 +27,19 @@ const Login = () => {
   let handlePassword = (e) => {
     setPassword(e.target.value);
     setPasswordErr("");
+  };
+
+  let handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        toast.success("Login Successful");
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode);
+        toast.error("Login Error");
+      });
   };
 
   let handleSubmit = () => {
@@ -41,13 +63,43 @@ const Login = () => {
         );
       }
     }
-    if (email && password) {
+    if (
+      email &&
+      password &&
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+    ) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((user) => {
+          console.log(user);
+          toast.success("Log in successful.");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          if (errorCode == "auth/invalid-credential") {
+            toast.error("Invalid user credential");
+          }
+        });
+
       setEmail("");
       setPassword("");
     }
   };
   return (
     <>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        // transition={Bounce}
+      />
       <div className="space-y-3">
         <h1 className="text-3xl font-bold">Login</h1>
         <div>
@@ -87,11 +139,20 @@ const Login = () => {
         >
           Login
         </button>
+        <button
+          onClick={handleGoogleSignIn}
+          className="text-blue-800 font-bold ml-2 border border-blue-800 px-4 py-1.5 text-xs rounded-md cursor-pointer"
+        >
+          Login with Google
+        </button>
         <p className="text-xs">
           Don't have an account?{" "}
           <Link to="/signin" className="text-blue-800">
             Sign In
           </Link>
+        </p>
+        <p className="text-xs text-blue-800">
+          <Link to="/forgot-password">Forgot Password?</Link>
         </p>
       </div>
     </>
